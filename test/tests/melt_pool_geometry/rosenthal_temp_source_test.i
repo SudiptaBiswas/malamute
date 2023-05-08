@@ -1,16 +1,21 @@
 [Mesh]
   type = GeneratedMesh
-  dim = 2
-  xmax = 2.0
-  ymin = -1
-  ymax = 1
-  nx = 20
-  ny = 20
+  dim = 2 # Problem dimension
+  nx = 15 # Number of elements in the x-direction
+  ny = 6 # Number of elements in the y-direction
+  xmin = 0 # minimum x-coordinate of the mesh
+  xmax = 1500 # maximum x-coordinate of the mesh
+  ymin = -300 # minimum y-coordinate of the mesh
+  ymax = 300 # maximum y-coordinate of the mesh
+  elem_type = QUAD4 # Type of elements used in the mesh
+  uniform_refine = 3 # Initial uniform refinement of the mesh
+
+  parallel_type = replicated # Periodic BCs
 []
 
 [Variables]
   [temp]
-    initial_condition = 393
+    initial_condition = 300
   []
 []
 
@@ -45,20 +50,20 @@
   [heat]
     type = ADHeatConductionMaterial
     specific_heat = 500
-    thermal_conductivity = 20
+    thermal_conductivity = 20e-2
   []
   [density]
     type = ADGenericConstantMaterial
     prop_names = 'density'
-    prop_values = '8000'
+    prop_values = '8000e-12'
   []
   [meltpool]
     type = ADRosenthalTemperatureSource
-    power = 1000
+    power = 100000
     velocity = 2.0
     absorptivity = 1.0
-    melting_temperature = 1660
-    ambient_temperature = 393
+    melting_temperature = 1700
+    ambient_temperature = 300
   []
 []
 
@@ -97,9 +102,9 @@
 
   l_max_its = 100
 
-  end_time = 20
+  end_time = 1000
   # num_steps = 2
-  dt = 0.1
+  # dt = 0.1
   dtmin = 1e-4
 []
 
