@@ -34,7 +34,7 @@ protected:
   /// Melting temperature
   const Real _Tm;
   /// Initial heat source location
-  const Real _x0;
+  const Point _p0;
 
   const GenericMaterialProperty<Real, is_ad> & _thermal_conductivity;
   const GenericMaterialProperty<Real, is_ad> & _specific_heat;

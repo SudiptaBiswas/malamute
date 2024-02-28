@@ -30,7 +30,8 @@ RosenthalTemperatureSourceTempl<is_ad>::validParams()
   params.addParam<Real>(
       "ambient_temperature", 300, "Ambient temparature far away from the surface");
   params.addRequiredParam<Real>("melting_temperature", "Melting temparature of the material");
-  params.addParam<Real>("initial_position", 0.0, "Initial coordiate of the heat source");
+  params.addParam<Point>(
+      "initial_position", Point(0.0, 0.0, 0.0), "Initial coordiate of the heat source");
   return params;
 }
 template <bool is_ad>
@@ -41,7 +42,7 @@ RosenthalTemperatureSourceTempl<is_ad>::RosenthalTemperatureSourceTempl(
     _V(getParam<Real>("velocity")),
     _T0(getParam<Real>("ambient_temperature")),
     _Tm(getParam<Real>("melting_temperature")),
-    _x0(getParam<Real>("initial_position")),
+    _p0(getParam<Point>("initial_position")),
     _thermal_conductivity(getGenericMaterialProperty<Real, is_ad>("thermal_conductivity")),
     _specific_heat(getGenericMaterialProperty<Real, is_ad>("specific_heat")),
     _density(getGenericMaterialProperty<Real, is_ad>("density")),
@@ -62,8 +63,10 @@ RosenthalTemperatureSourceTempl<is_ad>::computeQpProperties()
   const Real & z = _q_point[_qp](2);
 
   // Moving heat source and distance
-  Real x_t = x - _x0 - _V * _t;
-  Real r = std::sqrt(x_t * x_t + y * y + z * z);
+  Real x_t = x - _p0(0) - _V * _t;
+  Real y_t = y - _p0(1);
+  Real z_t = z - _p0(2);
+  Real r = std::sqrt(x_t * x_t + y_t * y_t + z_t * z_t);
 
   _thermal_diffusivity[_qp] = _thermal_conductivity[_qp] / (_specific_heat[_qp] * _density[_qp]);
 
